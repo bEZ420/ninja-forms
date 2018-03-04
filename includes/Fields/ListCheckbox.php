@@ -25,6 +25,8 @@ class NF_Fields_ListCheckbox extends NF_Abstracts_List
 
         $this->_nicename = __( 'Checkbox List', 'ninja-forms' );
 
+        add_filter( 'ninja_forms_custom_columns', array( $this, 'custom_columns' ), 10, 2 );
+
         add_filter( 'ninja_forms_merge_tag_calc_value_' . $this->_type, array( $this, 'get_calc_value' ), 10, 2 );
     }
 
@@ -34,8 +36,12 @@ class NF_Fields_ListCheckbox extends NF_Abstracts_List
 
         $field = Ninja_Forms()->form( $form_id )->get_field( $id );
 
+        $settings = $field->get_settings();
+        $settings[ 'options' ] = apply_filters( 'ninja_forms_render_options', $settings[ 'options' ], $settings );
+        $settings[ 'options' ] = apply_filters( 'ninja_forms_render_options_' . $field->get_type(), $settings[ 'options' ], $settings );
+
         $list = '';
-        foreach( $field->get_setting( 'options' ) as $option ){
+        foreach( $settings[ 'options' ] as $option ){
             $checked = '';
             if( is_array( $value ) && in_array( $option[ 'value' ], $value ) ) $checked = "checked";
             $list .= "<li><label><input type='checkbox' value='{$option[ 'value' ]}' name='fields[$id][]' $checked> {$option[ 'label' ]}</label></li>";
@@ -55,5 +61,19 @@ class NF_Fields_ListCheckbox extends NF_Abstracts_List
             }
         }
         return $value;
+    }
+
+    
+    public function custom_columns( $value, $field )
+    {
+        if( $this->_name != $field->get_setting( 'type' ) ) return $value;
+
+        $output = '';
+
+        foreach( $value as $option ){
+            $output .= esc_html( $option ).'<br>';
+        }
+
+        return $output;
     }
 }
