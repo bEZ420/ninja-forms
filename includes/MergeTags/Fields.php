@@ -47,7 +47,7 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
 
             $field[ 'value' ] = apply_filters( 'ninja_forms_merge_tag_value_' . $field[ 'type' ], $field[ 'value' ], $field );
 
-            if( is_array( $field[ 'value' ] ) ) $field[ 'value' ] = implode( ', ', $field[ 'value' ] );
+            if( is_array( $field[ 'value' ] ) ) $field[ 'value' ] = "<ul><li>".implode( '</li><li>', $field[ 'value' ] )."</li></ul>";
 
             $return .= '<tr><td>' . apply_filters('ninja_forms_merge_label', $field[ 'label' ]) .':</td><td>' . $field[ 'value' ] . '</td></tr>';
         }
@@ -142,7 +142,7 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
         $field_id  = $field[ 'id' ];
         $callback  = 'field_' . $field_id;
 
-        if( is_array( $field[ 'value' ] ) ) $field[ 'value' ] = implode( ',', $field[ 'value' ] );
+        if( is_array( $field[ 'value' ] ) ) $field[ 'value' ] = "<ul><li>".implode( '</li><li>', $field[ 'value' ] )."</li></ul>";
 
         $field[ 'value' ] = strip_shortcodes( $field[ 'value' ] );
 
